@@ -73,8 +73,7 @@ export function SearchPage() {
     }
 
     useEffect(() =>{
-        console.log('effect => currentPage changed: ',currentPage)
-    },[currentPage])
+    },[])
 
     return (
         <main>

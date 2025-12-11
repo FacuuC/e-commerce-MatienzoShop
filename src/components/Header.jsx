@@ -1,17 +1,19 @@
+import { Link } from "./Link.jsx"
+
 export function Header() {
     return (
         <header id="menu-bar">
-            <a href="/">
+            <Link href="/">
                 <h2>MatienzoShop</h2>
-            </a>
+            </Link>
 
             <nav id="nav-bar">
-                <a href="/">Inicio</a>
-                <a href="/search">Celulares</a>
-                <a href="/sobre-nosotros">Sobre Nosotros</a>
+                <Link href="/">Inicio</Link>
+                <Link href="/search">Celulares</Link>
+                <Link href="/sobre-nosotros">Sobre Nosotros</Link>
             </nav>
             <div id="sign-in">
-                <a href="/iniciar-sesion">Iniciar Sesion</a>
+                <Link href="/iniciar-sesion">Iniciar Sesion</Link>
             </div>
         </header>
     )
