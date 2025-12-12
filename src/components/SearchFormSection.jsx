@@ -1,4 +1,5 @@
-import { useId } from "react"
+import { useId, useState } from "react"
+import { useSearchForm } from "../hooks/useSearchForm"
 
 export function SearchFormSection({ onFiltersChange }) {
     const idText = useId()
@@ -6,19 +7,7 @@ export function SearchFormSection({ onFiltersChange }) {
     const idCapacidad = useId()
     const idBateria = useId()
 
-    const handleFormChange = (event) => {
-        event.preventDefault()
-
-        const formData = new FormData(event.currentTarget)
-
-        const filters = {
-            search: formData.get(idText),
-            marca: formData.get(idMarca),
-            capacidad: formData.get(idCapacidad),
-            bateria: formData.get(idBateria)
-        }
-        onFiltersChange(filters)
-    }
+    const { handleFormChange } = useSearchForm({idText, idMarca, idCapacidad, idBateria, onFiltersChange})
 
     return (
         <section className="cels-search">
