@@ -1,5 +1,4 @@
-import { useState } from "react"
-import iphonesData from "../productosIphone.json"
+import { useEffect, useState } from "react"
 
 const RESULTS_PER_PAGE = 12
 
@@ -12,49 +11,54 @@ export function useFilters (){
     })
 
     const [currentPage, setCurrentPage] = useState(1)
+    const [cels, setCels] = useState([])
+    const [loading, setLoading] = useState(false)
+    const [totalPages, setTotalPages] = useState(1)
+    const [totalResultados, setTotalResultados] = useState(1)
 
-    const celsFilteredByFilters = iphonesData.filter(cel => {
-        const modelo = cel.MODELO ? cel.MODELO.toLowerCase() : ''
-        const capacidad = cel.CAPACIDAD ? String(cel.CAPACIDAD) : ''
-        const bateria = cel.BATERÍA ? parseInt(cel.BATERÍA) : 0
+    const pageBackend = currentPage -1
 
-        const searchFilter = filters.search ? filters.search.toLowerCase() : ''
-        const matchText = !searchFilter || modelo.includes(searchFilter)
+    useEffect(() => {
+        async function fetchCels (){
+            try {
+                const params = new URLSearchParams()
+                if (filters.search) params.append('search', filters.search)
+                if (filters.marca) params.append('marca', filters.marca)
+                if (filters.capacidad) params.append('almacenamiento', filters.capacidad)
+                if (filters.bateria){
+                    if (filters.bateria <= 84) {params.append('maxBateria', filters.bateria)}
+                    else { params.append('minBateria', filters.bateria)
+                        if (filters.bateria === 100){ params.append('maxBateria', filters.bateria)}
+                        else { params.append('maxBateria', (filters.bateria + 4))}
+                    }
+                }
+                params.append('size', RESULTS_PER_PAGE)
+                params.append('page', pageBackend)
 
-        const marcaFilter = filters.marca ? filters.marca.toLowerCase() : ''
-        const matchMarca = !marcaFilter || modelo.includes(marcaFilter)
+                const queryParams = params.toString()                
 
-        const capacidadFilter = filters.capacidad
-        const matchCap = !capacidadFilter || capacidad === capacidadFilter
+                setLoading(true)
+                const url = `http://localhost:8080/celulares?${queryParams}`
+                console.log(url)
+                const response = await fetch(url)
+                const data = await response.json()
 
-        const bateriaFilter = filters.bateria ? parseInt(filters.bateria) : 0
-        let matchBat = true
-        if (bateriaFilter) {
-            const val = parseInt(bateriaFilter)
-
-            if (val === 100) {
-                matchBat = bateria === 100
-            } else if (val === 84) {
-                matchBat = bateria <= 84
-            } else {
-                matchBat = bateria >= val && bateria < (val + 5)
+                if (data.content){
+                    setCels(data.content)
+                    setTotalPages(data.totalPages)
+                    setTotalResultados(data.totalElements)
+                }else {
+                    setCels([])
+                }
+            } catch (error) {
+                console.error('Error fetching celulares: ',error)
+            } finally {
+                setLoading(false)
             }
         }
 
-        return (
-            matchText &&
-            matchMarca &&
-            matchCap &&
-            matchBat
-        )
-    })
-
-    const totalPages = Math.ceil(celsFilteredByFilters.length / RESULTS_PER_PAGE)
-
-    const pagedResults = celsFilteredByFilters.slice(
-        (currentPage - 1) * RESULTS_PER_PAGE,
-        currentPage * RESULTS_PER_PAGE
-    )
+        fetchCels()
+    }, [filters, currentPage])
 
     const handlePageChange = (page) => {
         setCurrentPage(page)
@@ -68,9 +72,10 @@ export function useFilters (){
     return {
         handlePageChange,
         handleFiltersChange,
-        celsFilteredByFilters,
-        pagedResults,
+        cels,
+        loading,
         currentPage,
-        totalPages
+        totalPages,
+        totalResultados
     }
 }

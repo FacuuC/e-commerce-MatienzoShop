@@ -24,11 +24,11 @@ export function SearchFormSection({ onFiltersChange }) {
                 <div className="search-filters">
                     <select name={idMarca}>
                         <option value="">Marca</option>
-                        <option value="iphone">iPhone</option>
-                        <option value="samsung">Samsung</option>
-                        <option value="xiaomi">Xiaomi</option>
-                        <option value="motorola">Motorola</option>
-                        <option value="huawei">Huawei</option>
+                        <option value="Apple">Apple</option>
+                        <option value="Samsung">Samsung</option>
+                        <option value="Xiaomi">Xiaomi</option>
+                        <option value="Motorola">Motorola</option>
+                        <option value="Huawei">Huawei</option>
                     </select>
                     <select name={idCapacidad} id="capacity-filter">
                         <option value="">Capacidad</option>

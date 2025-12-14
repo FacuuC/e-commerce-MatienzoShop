@@ -11,20 +11,25 @@ export function SearchPage() {
     const {
         handleFiltersChange,
         handlePageChange,
-        celsFilteredByFilters,
-        pagedResults,
+        cels,
+        loading,
         currentPage,
         totalPages,
+        totalResultados
     } = useFilters()
+
+    useEffect (() => {
+        document.title = `Resultados: ${totalResultados}, Página ${currentPage} - MatienzoShop`
+    }, [totalResultados, currentPage])
 
     return (
         <main>
             <SearchFormSection onFiltersChange={handleFiltersChange} />
             
-            <section>
-                <CatalogoCelulares iphones={pagedResults} />
-
-                {celsFilteredByFilters.length > 0 && (
+            <section>{
+                loading ? <p>Cargando empleos...</p> : <CatalogoCelulares celulares={cels} />
+            }
+                {totalPages > 0 && (
                     <Pagination
                         currentPage={currentPage}
                         totalPages={totalPages}
