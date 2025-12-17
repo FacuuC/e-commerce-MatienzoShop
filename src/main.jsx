@@ -4,8 +4,5 @@ import { App } from './App.jsx'
 import { Catalogo } from './Catalogo.jsx'
 
 createRoot(document.getElementById('app')).render(
-<StrictMode>
     <App />
-</StrictMode>
-
 )

@@ -1,20 +1,39 @@
 import { useEffect, useState } from "react"
+import { useRouter } from "./useRouter"
 
 const RESULTS_PER_PAGE = 12
 
 export function useFilters (){
-    const [filters, setFilters] = useState({
-        search: '',
-        marca: '',
-        capacidad: '',
-        bateria: ''
+    const [filters, setFilters] = useState(() => {
+        const params = new URLSearchParams(window.location.search)
+        // Leer batería: puede venir como minBateria o maxBateria
+        const minBateria = params.get('minBateria')
+        const maxBateria = params.get('maxBateria')
+        const bateria = minBateria || maxBateria || ''
+        
+        return {
+            search: params.get('search') || '',
+            marca: params.get('marca') || '',
+            capacidad: params.get('almacenamiento') || '',
+            bateria: Number(bateria)
+        }
     })
 
-    const [currentPage, setCurrentPage] = useState(1)
+    const [currentPage, setCurrentPage] = useState(() => {
+        const params = new URLSearchParams(window.location.search)
+        const page = Number(params.get('page'))
+        if (Number.isNaN(page) || Number(page) <= 0){
+            return 1
+        } 
+        console.log(Number(page))
+        return Number(page)
+    })
+
     const [cels, setCels] = useState([])
     const [loading, setLoading] = useState(false)
     const [totalPages, setTotalPages] = useState(1)
     const [totalResultados, setTotalResultados] = useState(1)
+    const { navigateTo } = useRouter()
 
     const pageBackend = currentPage -1
 
@@ -60,6 +79,28 @@ export function useFilters (){
         fetchCels()
     }, [filters, currentPage])
 
+    useEffect(() => {
+        const params = new URLSearchParams()
+
+        if(filters.search) params.append('search', filters.search)
+        if(filters.marca) params.append('marca', filters.marca)
+        if(filters.capacidad) params.append('almacenamiento', filters.capacidad)
+            if (filters.bateria){
+                if (filters.bateria <= 84) {params.append('maxBateria', filters.bateria)}
+                else { params.append('minBateria', filters.bateria)
+                    if (filters.bateria === 100){ params.append('maxBateria', filters.bateria)}
+                    else { params.append('maxBateria', (filters.bateria + 4))}
+                }}
+
+        if(currentPage > 1) params.append('page', currentPage)
+
+        const newUrl = params.toString()
+            ? `${window.location.pathname}?${params.toString()}`
+            : window.location.pathname
+
+        navigateTo(newUrl)
+            }, [filters, currentPage, navigateTo])
+
     const handlePageChange = (page) => {
         setCurrentPage(page)
     }
@@ -72,6 +113,7 @@ export function useFilters (){
     return {
         handlePageChange,
         handleFiltersChange,
+        filters,
         cels,
         loading,
         currentPage,

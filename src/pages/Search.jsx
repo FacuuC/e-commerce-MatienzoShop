@@ -11,6 +11,7 @@ export function SearchPage() {
     const {
         handleFiltersChange,
         handlePageChange,
+        filters,
         cels,
         loading,
         currentPage,
@@ -24,7 +25,10 @@ export function SearchPage() {
 
     return (
         <main>
-            <SearchFormSection onFiltersChange={handleFiltersChange} />
+            <SearchFormSection 
+            initialFilters={filters} 
+            onFiltersChange={handleFiltersChange} 
+            />
             
             <section>{
                 loading ? <p>Cargando empleos...</p> : <CatalogoCelulares celulares={cels} />

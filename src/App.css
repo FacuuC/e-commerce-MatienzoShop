@@ -134,6 +134,10 @@ main {
 }
 
 /* Estilos para el catálogo de celulares */
+.search-bar{
+    display: flex;
+}
+
 #catalogo-section {
     flex: 1;
     max-width: 1400px;

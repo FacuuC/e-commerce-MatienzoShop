@@ -1,9 +1,9 @@
-import { useState } from "react"
+import { useState, useRef} from "react"
 
-let timeoutId = null
-
-export function useSearchForm ({idText, idMarca, idCapacidad, idBateria, onFiltersChange}) {
+export function useSearchForm ({idText, idMarca, idCapacidad, idBateria, inputRef, onFiltersChange}) {
     const [searchText, setSearchText] = useState("")
+
+    const timeoutId = useRef(null)
     
     const handleFormChange = (event) => {
         event.preventDefault()
@@ -19,16 +19,31 @@ export function useSearchForm ({idText, idMarca, idCapacidad, idBateria, onFilte
             bateria: formData.get(idBateria) === "" ? formData.get(idBateria) : parseInt(formData.get(idBateria))
         }
 
-        if (timeoutId){
-            clearTimeout(timeoutId)
+        //Debounce
+        if (timeoutId.current){
+            clearTimeout(timeoutId.current)
         }
-        timeoutId = setTimeout(() => {
+        timeoutId.current = setTimeout(() => {
             onFiltersChange(filters)
         }, 500)
         
     }
 
-    return {searchText,
-        handleFormChange
+    const handleClearInput = (event) => {
+        event.preventDefault()
+        inputRef.current.value = ""
+        onFiltersChange({
+            search: '',
+            marca: '',
+            capacidad: '',
+            bateria: ''
+        })
+
+    }
+
+    return {
+        searchText,
+        handleFormChange,
+        handleClearInput
         } 
 }
