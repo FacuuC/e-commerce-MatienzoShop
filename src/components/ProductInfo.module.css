@@ -1,0 +1,44 @@
+.productInfo{
+    position: relative;
+    background: white;
+    border-radius: 15px;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: .7rem;
+    max-width: 480px;
+    width: 100%;
+    margin: 0 auto;
+
+    .productHeader{
+        display: flex;
+        flex-direction: column;
+        border-bottom: 1px solid rgba(75, 75, 75, 0.719);
+        padding-bottom: 1rem;
+
+        .productRating{
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+
+            .brand{
+                color: #7c3aed;
+                font-weight: 700;
+                font-size: small;
+                background: #8c52f03b;
+                padding: 3px 6px;
+                border-radius: 8px;
+            }
+
+            .rating{
+                color: #FB923C;
+                font-weight: 700;
+                font-size: small;
+            }
+        }
+    }
+
+    .description{
+        color: rgba(75, 75, 75, 0.719);
+    }
+}
