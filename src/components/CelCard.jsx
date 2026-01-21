@@ -1,3 +1,5 @@
+import { Link } from "./Link"
+
 export function CelCard({ productoCel }) {
     return (
         <article key={productoCel.id} className="producto-card">
@@ -8,7 +10,9 @@ export function CelCard({ productoCel }) {
                 <p><strong>Batería:</strong> {productoCel.bateria}%</p>
                 <div className="detalle-precio">
                     <p className="precio"><strong>Precio:</strong> ${productoCel.precio}</p>
-                    <button className="btn-comprar">Saber más</button>
+                    <Link href={`/celulares/${productoCel.id}`}>
+                        <button className="btn-comprar">Saber más</button>
+                    </Link>
                 </div>
             </div>
             {productoCel.descripcion && (

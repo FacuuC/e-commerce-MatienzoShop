@@ -1,29 +1,25 @@
-import { useRouter } from './hooks/useRouter.jsx'
+import { Routes, Route } from 'react-router'
 
 import { Header } from "./components/Header.jsx"
 import { Footer } from "./components/Footer.jsx"
-import { Route } from './components/Route.jsx'
-import { mostrarListaNormalizada } from './cargaCelularesBD.js'
 
 import { HomePage } from "./pages/Home.jsx"
 import { SearchPage} from "./pages/Search.jsx"
+import { NotFoundPage } from './pages/404.jsx'
+import { CelDetail } from './pages/Detail.jsx'
 
 import './App.css'
-import { NotFoundPage } from './pages/404.jsx'
-
-const routes = {
-    '/':HomePage,
-    '/search':SearchPage
-}
 
 export function App() {
-    const { currentPath} = useRouter()
-    const PageComponent = routes[currentPath] || NotFoundPage
-
 	return (
         <>
             <Header />
-            <PageComponent />
+            <Routes>
+                <Route path="/" element={<HomePage />} />
+                <Route path='/search' element={<SearchPage />} />
+                <Route path="/celulares/:celId" element={<CelDetail />} />
+                <Route path="*" element={<NotFoundPage />} />
+            </Routes>
             <Footer />
         </>
     )

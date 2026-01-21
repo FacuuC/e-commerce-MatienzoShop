@@ -58,7 +58,6 @@ export function useFilters (){
 
                 setLoading(true)
                 const url = `http://localhost:8080/celulares?${queryParams}`
-                console.log(url)
                 const response = await fetch(url)
                 const data = await response.json()
 
@@ -98,8 +97,11 @@ export function useFilters (){
             ? `${window.location.pathname}?${params.toString()}`
             : window.location.pathname
 
-        navigateTo(newUrl)
-            }, [filters, currentPage, navigateTo])
+        const currentUrl = window.location.pathname + window.location.search
+        if (currentUrl !== newUrl) {
+            navigateTo(newUrl)
+        }  
+    }, [filters, currentPage, navigateTo])
 
     const handlePageChange = (page) => {
         setCurrentPage(page)
